@@ -276,8 +276,12 @@ function animate() {
             player.position.x += speed;
         }
 
+        // BOUNDING COLLISIONS
         if (player.position.x >= 6) {
-                player.position.x = 6;
+            player.position.x = 6;
+        }
+        if (player.position.x <= -6) {
+            player.position.x = -6;
         }
 
         renderer.render(scene, camera);
