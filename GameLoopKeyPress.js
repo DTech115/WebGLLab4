@@ -35,18 +35,6 @@ collisionMessage.style.display = "none";
 collisionMessage.style.zIndex = "1";
 document.body.appendChild(collisionMessage);
 
-const timerMessage = document.createElement("div");
-timerMessage.style.position = "fixed";
-timerMessage.style.top = "24px";
-timerMessage.style.right = "24px";
-timerMessage.style.fontFamily = "sans-serif";
-timerMessage.style.fontSize = "24px";
-timerMessage.style.fontWeight = "bold";
-timerMessage.style.color = "#ffffff";
-timerMessage.style.textShadow = "2px 2px 4px #000000";
-timerMessage.style.zIndex = "1";
-document.body.appendChild(timerMessage);
-
 // score message
 const scoreMessage = document.createElement("div");
 scoreMessage.style.position = "fixed";
@@ -201,30 +189,6 @@ let gameOver = false;
 let lastSpawn = 0;
 let nextObstacleIndex = 0;
 
-function updateTimerMessage(secondsRemaining) {
-    if (secondsRemaining === 0) {
-        timerMessage.textContent = "TIME'S UP!";
-        timerMessage.style.top = "50%";
-        timerMessage.style.right = "auto";
-        timerMessage.style.left = "50%";
-        timerMessage.style.transform = "translate(-50%, -50%)";
-        timerMessage.style.width = "100%";
-        timerMessage.style.textAlign = "center";
-        timerMessage.style.fontSize = "15vw";
-        timerMessage.style.color = "#ff3333";
-        gameOver = true;
-    } else {
-        timerMessage.textContent = `Time: ${secondsRemaining}`;
-    }
-}
-
-function updateTimer() {
-    const elapsedSeconds = Math.floor((performance.now() - gameStartTime) / 1000);
-    const secondsRemaining = Math.max(gameDuration - elapsedSeconds, 0);
-    updateTimerMessage(secondsRemaining);
-}
-
-
 function updateScoreMessage() {
     scoreMessage.textContent = `Score: ${score}`;
 }
@@ -266,7 +230,7 @@ function animate() {
 
     const currentTime = performance.now();
 
-    if (currentTime - lastSpawn > 1000) {
+    if (currentTime - lastSpawn > 500) {
         spawnNextObstacle();
         score += 1;
         lastSpawn = currentTime;
@@ -277,7 +241,7 @@ function animate() {
         if (!obstacle.userData.spawned) {
             continue;
         }
-        obstacle.position.y -= 0.1;
+        obstacle.position.y -= 0.07;
     }
 
     handleCollisions();
@@ -294,17 +258,7 @@ function animate() {
     if (score < 100 && !gameOver) {
         requestAnimationFrame(animate);
 
-        updateTimer();
-
         // WASD Controls
-        if (keys["w"]) {
-            player.position.z -= speed;
-        }
-
-        if (keys["s"]) {
-            player.position.z += speed;
-        }
-
         if (keys["a"]) {
             player.position.x -= speed;
         }
@@ -314,20 +268,16 @@ function animate() {
         }
 
         // Arrow Key Controls
-        if (keys["arrowup"]) {
-            player.position.z -= speed;
-        }
-
-        if (keys["arrowdown"]) {
-            player.position.z += speed;
-        }
-
         if (keys["arrowleft"]) {
             player.position.x -= speed;
         }
 
         if (keys["arrowright"]) {
             player.position.x += speed;
+        }
+
+        if (player.position.x >= 6) {
+                player.position.x = 6;
         }
 
         renderer.render(scene, camera);
