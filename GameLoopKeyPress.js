@@ -93,19 +93,19 @@ scene.add(player);
 
 const obstacles = [
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(1.0, 1.0, 1.0),
         new THREE.MeshStandardMaterial({ color: 0xff6600 })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(0.8, 0.8, 0.8),
         new THREE.MeshStandardMaterial({ color: 0xff00aa })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(2.0, 2.0, 2.0),
         new THREE.MeshStandardMaterial({ color: 0xffff00 })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(0.5, 0.5, 0.5),
         new THREE.MeshStandardMaterial({ color: 0x00ffff })
     ),
     new THREE.Mesh(
@@ -113,23 +113,23 @@ const obstacles = [
         new THREE.MeshStandardMaterial({ color: 0x00ff73 })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(1.4, 1.4, 1.4),
         new THREE.MeshStandardMaterial({ color: 0xdedede })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(1.2, 1.2, 1.2),
         new THREE.MeshStandardMaterial({ color: 0xaed123 })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(0.2, 0.2, 0.2),
         new THREE.MeshStandardMaterial({ color: 0x12ea3d })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(1.3, 1.3, 1.3),
         new THREE.MeshStandardMaterial({ color: 0x14e2af })
     ),
     new THREE.Mesh(
-        new THREE.BoxGeometry(0.7, 0.7, 0.7),
+        new THREE.BoxGeometry(5.0, 5.0, 5.0),
         new THREE.MeshStandardMaterial({ color: 0x94def2 })
     )
 ];
