@@ -101,9 +101,10 @@ const player = new THREE.Mesh(
 );
 
 player.position.y = 0.5;
+player.position.z = 7;
 scene.add(player);
 
-const collectibles = [
+const obstacles = [
     new THREE.Mesh(
         new THREE.BoxGeometry(0.7, 0.7, 0.7),
         new THREE.MeshStandardMaterial({ color: 0xff6600 })
@@ -152,18 +153,16 @@ function placeCubes(cubes) {
     while (objectPositions.length < cubes.length) {
         const position = [
             Math.random() * 12 - 6,
-            0.5,
-            Math.random() * 12 - 6
+            10,
+            7
         ];
-        const isFarEnoughFromPlayer = Math.hypot(position[0], position[2]) > 2.5;
         const isFarEnoughFromObjects = objectPositions.every((otherPosition) =>
             Math.hypot(
                 position[0] - otherPosition[0],
-                position[2] - otherPosition[2]
-            ) > 2.5
+            ) > 0.8
         );
 
-        if (isFarEnoughFromPlayer && isFarEnoughFromObjects) {
+        if (isFarEnoughFromObjects) {
             objectPositions.push(position);
         }
     }
@@ -174,7 +173,7 @@ function placeCubes(cubes) {
     });
 }
 
-placeCubes(collectibles);
+placeCubes(obstacles);
 
 // Keyboard State Object
 const keys = {};
@@ -199,6 +198,7 @@ const gameStartTime = performance.now();
 const gameDuration = 20;
 let score = 0;
 let timeUp = false;
+let lastSpawn = 0;
 
 function updateTimerMessage(secondsRemaining) {
     if (secondsRemaining === 0) {
@@ -232,7 +232,7 @@ function handleCollisions() {
     playerBounds.setFromObject(player);
     let isColliding = false;
 
-    collectibles.forEach((object) => {
+    obstacles.forEach((object) => {
     
         objectBounds.setFromObject(object);
         object.rotation.y += 0.02;
@@ -252,6 +252,7 @@ function handleCollisions() {
 // Animation Loop
 function animate() {
 
+    const currentTime = performance.now();
 
     if (score < 100 && !timeUp) {
         requestAnimationFrame(animate);
