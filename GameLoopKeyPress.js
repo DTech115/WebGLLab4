@@ -20,20 +20,19 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const collisionMessage = document.createElement("div");
-collisionMessage.textContent = "Collision is happening!";
-collisionMessage.style.position = "fixed";
-collisionMessage.style.top = "24px";
-collisionMessage.style.left = "50%";
-collisionMessage.style.transform = "translateX(-50%)";
-collisionMessage.style.fontFamily = "sans-serif";
-collisionMessage.style.fontSize = "28px";
-collisionMessage.style.fontWeight = "bold";
-collisionMessage.style.color = "#ffffff";
-collisionMessage.style.textShadow = "2px 2px 4px #000000";
-collisionMessage.style.display = "none";
-collisionMessage.style.zIndex = "1";
-document.body.appendChild(collisionMessage);
+const gameOverMessage = document.createElement("div");
+gameOverMessage.textContent = "GAME OVER";
+gameOverMessage.style.top = "50%";
+gameOverMessage.style.right = "auto";
+gameOverMessage.style.left = "50%";
+gameOverMessage.style.transform = "translate(-50%, -50%)";
+gameOverMessage.style.width = "100%";
+gameOverMessage.style.textAlign = "center";
+gameOverMessage.style.fontSize = "15vw";
+gameOverMessage.style.color = "#ff3333";
+gameOverMessage.style.display = "none";
+gameOverMessage.style.position = "fixed";
+document.body.appendChild(gameOverMessage);
 
 // score message
 const scoreMessage = document.createElement("div");
@@ -219,6 +218,7 @@ function handleCollisions() {
         if (objectIsColliding && !object.userData.collected) {
             isColliding = true;
             object.userData.collected = true;
+            gameOver = true;
             scene.remove(object);
         }
     });
@@ -255,7 +255,7 @@ function animate() {
         }
     }
 
-    if (score < 100 && !gameOver) {
+    if (!gameOver) {
         requestAnimationFrame(animate);
 
         // WASD Controls
@@ -285,10 +285,8 @@ function animate() {
         }
 
         renderer.render(scene, camera);
-    } else if (score >= 100 && !gameOver) {
-        collisionMessage.textContent = "Congratulations! You win!";
-        collisionMessage.style.display = "block";
-        collisionMessage.style.color = "#22cc55";
+    } else {
+        gameOverMessage.style.display = "block";
     }
 }
 
