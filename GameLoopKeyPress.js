@@ -197,7 +197,7 @@ let allCollected = false;
 const gameStartTime = performance.now();
 const gameDuration = 20;
 let score = 0;
-let timeUp = false;
+let gameOver = false;
 let lastSpawn = 0;
 let nextObstacleIndex = 0;
 
@@ -212,7 +212,7 @@ function updateTimerMessage(secondsRemaining) {
         timerMessage.style.textAlign = "center";
         timerMessage.style.fontSize = "15vw";
         timerMessage.style.color = "#ff3333";
-        timeUp = true;
+        gameOver = true;
     } else {
         timerMessage.textContent = `Time: ${secondsRemaining}`;
     }
@@ -226,7 +226,7 @@ function updateTimer() {
 
 
 function updateScoreMessage() {
-    scoreMessage.textContent = `Score: ${score} / 100`;
+    scoreMessage.textContent = `Score: ${score}`;
 }
 
 function spawnNextObstacle() {
@@ -255,7 +255,6 @@ function handleCollisions() {
         if (objectIsColliding && !object.userData.collected) {
             isColliding = true;
             object.userData.collected = true;
-            score += 10;
             scene.remove(object);
         }
     });
@@ -269,6 +268,7 @@ function animate() {
 
     if (currentTime - lastSpawn > 1000) {
         spawnNextObstacle();
+        score += 1;
         lastSpawn = currentTime;
     }
 
@@ -277,7 +277,7 @@ function animate() {
         if (!obstacle.userData.spawned) {
             continue;
         }
-        obstacle.position.y -= 0.05;
+        obstacle.position.y -= 0.1;
     }
 
     handleCollisions();
@@ -291,7 +291,7 @@ function animate() {
         }
     }
 
-    if (score < 100 && !timeUp) {
+    if (score < 100 && !gameOver) {
         requestAnimationFrame(animate);
 
         updateTimer();
@@ -331,7 +331,7 @@ function animate() {
         }
 
         renderer.render(scene, camera);
-    } else if (score >= 100 && !timeUp) {
+    } else if (score >= 100 && !gameOver) {
         collisionMessage.textContent = "Congratulations! You win!";
         collisionMessage.style.display = "block";
         collisionMessage.style.color = "#22cc55";
