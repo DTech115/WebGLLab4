@@ -169,11 +169,11 @@ function placeCubes(cubes) {
 
     cubes.forEach((cube, index) => {
         cube.position.set(...objectPositions[index]);
+        cube.userData.spawned = true;
+        cube.userData.collected = false;
         scene.add(cube);
     });
 }
-
-placeCubes(obstacles);
 
 // Keyboard State Object
 const keys = {};
@@ -199,6 +199,7 @@ const gameDuration = 20;
 let score = 0;
 let timeUp = false;
 let lastSpawn = 0;
+let nextObstacleIndex = 0;
 
 function updateTimerMessage(secondsRemaining) {
     if (secondsRemaining === 0) {
@@ -228,11 +229,23 @@ function updateScoreMessage() {
     scoreMessage.textContent = `Score: ${score} / 100`;
 }
 
+function spawnNextObstacle() {
+    if (obstacles.length === 0) {
+        return;
+    }
+
+    placeCubes([obstacles[nextObstacleIndex]]);
+    nextObstacleIndex = (nextObstacleIndex + 1) % obstacles.length;
+}
+
 function handleCollisions() {
     playerBounds.setFromObject(player);
     let isColliding = false;
 
     obstacles.forEach((object) => {
+        if (!object.userData.spawned) {
+            return;
+        }
     
         objectBounds.setFromObject(object);
         object.rotation.y += 0.02;
@@ -253,6 +266,30 @@ function handleCollisions() {
 function animate() {
 
     const currentTime = performance.now();
+
+    if (currentTime - lastSpawn > 1000) {
+        spawnNextObstacle();
+        lastSpawn = currentTime;
+    }
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        const obstacle = obstacles[i];
+        if (!obstacle.userData.spawned) {
+            continue;
+        }
+        obstacle.position.y -= 0.05;
+    }
+
+    handleCollisions();
+    updateScoreMessage();
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        const obstacle = obstacles[i];
+
+        if (obstacle.userData.spawned && obstacle.position.y < player.position.y) {
+            scene.remove(obstacle);
+        }
+    }
 
     if (score < 100 && !timeUp) {
         requestAnimationFrame(animate);
@@ -292,9 +329,6 @@ function animate() {
         if (keys["arrowright"]) {
             player.position.x += speed;
         }
-
-        handleCollisions();
-        updateScoreMessage();
 
         renderer.render(scene, camera);
     } else if (score >= 100 && !timeUp) {
